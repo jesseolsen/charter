@@ -11,12 +11,13 @@ function App() {
         },
     }).then(data => {
       data.json().then(json => {
-        setRestaurants(json.sort((a,b)=>a.name < b.name ? -1 : 1));
+        setRestaurants(json);
         console.log(json);
       })
     });
   }, []);
   console.log('restaurants', restaurants);
+  const [stateFilter, setStateFilter] = useState('');
   return (
     <div>
       <header className="App-header">
@@ -30,9 +31,25 @@ function App() {
                 <td key={uuid()}>Telephone</td>
                 <td key={uuid()}>Genre</td>
               </tr>
+              <tr>
+                <td key={uuid()}><input /></td>
+                <td key={uuid()}><input /></td>
+                <td key={uuid()}><input
+                        type="text"
+                        value={ stateFilter }
+                        autoFocus={true}
+                        onChange={e => {
+                          e.preventDefault();
+                          setStateFilter( e.target.value );
+                        }}
+                /></td>
+                <td key={uuid()}><input /></td>
+                <td key={uuid()}><input /></td>
+              </tr>
             </thead>
             <tbody>
-              {restaurants.slice(0,10).map(r => <><tr key={r.id}>
+              {restaurants.slice(0,10).sort((a,b)=>a.name < b.name ? -1 : 1)
+                .filter(r=>r.state.startsWith(stateFilter)).map(r => <><tr key={r.id}>
                 <td key={uuid()}>{r.name}</td>
                 <td key={uuid()}>{r.city}</td>
                 <td key={uuid()}>{r.state}</td>
