@@ -35,7 +35,7 @@ function App() {
         </a>
         <a
           className="App-link"
-          href="://reactjs.org"
+          href="https://github.com/jesseolsen/charter"
           target="_blank"
           rel="noopener noreferrer"
         >
