@@ -17,7 +17,9 @@ function App() {
     });
   }, []);
   console.log('restaurants', restaurants);
+  const [genreFilter, setGenreFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
+  const [filter, setFilter] = useState('');
   return (
     <div>
       <header className="App-header">
@@ -37,19 +39,31 @@ function App() {
                 <td key={uuid()}><input
                         type="text"
                         value={ stateFilter }
-                        autoFocus={true}
+                        autoFocus={filter === 'State'}
                         onChange={e => {
                           e.preventDefault();
+                          setFilter('State');
                           setStateFilter( e.target.value );
                         }}
                 /></td>
                 <td key={uuid()}><input /></td>
-                <td key={uuid()}><input /></td>
+                <td key={uuid()}><input
+                        type="text"
+                        value={ genreFilter }
+                        autoFocus={filter === 'Genre'}
+                        onChange={e => {
+                          e.preventDefault();
+                          setFilter('Genre');
+                          setGenreFilter( e.target.value );
+                        }}
+                /></td>
               </tr>
             </thead>
             <tbody>
               {restaurants.slice(0,10).sort((a,b)=>a.name < b.name ? -1 : 1)
-                .filter(r=>r.state.startsWith(stateFilter)).map(r => <><tr key={r.id}>
+                .filter(r=>r.state.startsWith(stateFilter.toUpperCase()))
+                .filter(r=>r.genre.toLowerCase().includes(genreFilter.toLowerCase()))
+                .map(r => <><tr key={r.id}>
                 <td key={uuid()}>{r.name}</td>
                 <td key={uuid()}>{r.city}</td>
                 <td key={uuid()}>{r.state}</td>
