@@ -1,11 +1,29 @@
 import './App.css';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [restaurants, setRestaurants] = useState([]);
+  useEffect(() => {
+    fetch("https://code-challenge.spectrumtoolbox.com/api/restaurants", {
+        headers: {
+        Authorization: "Api-Key q3MNxtfep8Gt",
+        },
+    }).then(data => {
+      data.json().then(json => {
+        setRestaurants(json);
+        console.log(json);
+      })
+    });
+  }, []);
+  console.log('restaurants', restaurants);
   return (
     <div className="App">
       <header className="App-header">
         <p>
-          Sample Restaurant React App
+          Restaurant data
+          <ul>
+            {restaurants.map(r => (<li key={r.id}>{r.name}</li>))}
+          </ul>
         </p>
         <a
           className="App-link"
