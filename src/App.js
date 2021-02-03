@@ -1,5 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
+import { uuid } from 'lodash-uuid';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
@@ -10,38 +11,36 @@ function App() {
         },
     }).then(data => {
       data.json().then(json => {
-        setRestaurants(json);
+        setRestaurants(json.sort((a,b)=>a.name < b.name ? -1 : 1));
         console.log(json);
       })
     });
   }, []);
   console.log('restaurants', restaurants);
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
-        <p>
-          Restaurant data
-          <table>
+        <p>Restaurant data</p>
+          <table className="styled-table">
             <thead>
               <tr>
-                <td>name</td>
-                <td>city</td>
-                <td>state</td>
-                <td>telephone</td>
-                <td>genre</td>
+                <td key={uuid()}>Name</td>
+                <td key={uuid()}>City</td>
+                <td key={uuid()}>State</td>
+                <td key={uuid()}>Telephone</td>
+                <td key={uuid()}>Genre</td>
               </tr>
             </thead>
             <tbody>
-              {restaurants.map(r => <><tr key={r.id}>
-                <td>{r.name}</td>
-                <td>{r.city}</td>
-                <td>{r.state}</td>
-                <td>{r.telephone}</td>
-                <td>{r.genre}</td>
+              {restaurants.slice(0,10).map(r => <><tr key={r.id}>
+                <td key={uuid()}>{r.name}</td>
+                <td key={uuid()}>{r.city}</td>
+                <td key={uuid()}>{r.state}</td>
+                <td key={uuid()}>{r.telephone}</td>
+                <td key={uuid()}>{r.genre}</td>
               </tr></>)}
             </tbody>
           </table>
-        </p>
         <a
           className="App-link"
           href="https://jesseolsen.github.io/charter/"
