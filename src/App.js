@@ -21,9 +21,26 @@ function App() {
       <header className="App-header">
         <p>
           Restaurant data
-          <ul>
-            {restaurants.map(r => (<li key={r.id}>{r.name}</li>))}
-          </ul>
+          <table>
+            <thead>
+              <tr>
+                <td>name</td>
+                <td>city</td>
+                <td>state</td>
+                <td>telephone</td>
+                <td>genre</td>
+              </tr>
+            </thead>
+            <tbody>
+              {restaurants.map(r => <><tr key={r.id}>
+                <td>{r.name}</td>
+                <td>{r.city}</td>
+                <td>{r.state}</td>
+                <td>{r.telephone}</td>
+                <td>{r.genre}</td>
+              </tr></>)}
+            </tbody>
+          </table>
         </p>
         <a
           className="App-link"
