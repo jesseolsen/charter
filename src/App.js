@@ -53,11 +53,20 @@ function App() {
               setSearch( searchText );
             }}>Search</button>
           </p>
+          {' '}Page {page+1} of {Math.ceil(restaurants.length / 10)}{' '}
           <p>
-            <button onClick={()=>setPage(0)}>&lt;&lt;</button>
-            <button onClick={()=>setPage(page === 0 ? 0 : page - 1)}>&lt;</button>
-            <button onClick={()=>setPage((page+1)*10 > restaurants.length ? page : page + 1)}>&gt;</button>
-            <button onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
+            <button
+              disabled={page === 0}
+              onClick={()=>setPage(0)}>&lt;&lt;</button>
+            <button
+              disabled={page === 0}
+              onClick={()=>setPage(page === 0 ? 0 : page - 1)}>&lt;</button>
+            <button
+              disabled={page === Math.floor(restaurants.length / 10)}
+              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : page + 1)}>&gt;</button>
+            <button
+              disabled={page === Math.floor(restaurants.length / 10)}
+              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
           </p>
           <table className="styled-table">
             <thead>
