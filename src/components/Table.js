@@ -1,6 +1,10 @@
 import '../App.css';
 import { useState } from 'react';
 import { uuid } from 'lodash-uuid';
+import PropTypes from 'prop-types';
+
+import Pagination from './Pagination';
+import Search from './Search';
 
 function Table(props) {
   const {restaurants} = props;
@@ -15,55 +19,24 @@ function Table(props) {
   return (
     <div>
       <header className="App-header">
-          <p>
-            <input
-              type="text"
-              value={ searchText }
-              autoFocus={filter === 'Search'}
-              placeholder='search'
-              onKeyDown={e => {
-                setFilter('Search');
-                if(e.key === 'Enter') {
-                  setSearch( e.target.value );
-                } else {
-                  setSearchText( e.target.value );
-                }
-              }}
-              onChange={e => {
-                setFilter('Search');
-                setSearchText( e.target.value );
-              }}
-            />
-            <button onClick={(e) => {
-              setSearch( searchText );
-            }}>Search</button>
-          </p>
-          {' '}Page {page+1} of {Math.ceil(restaurants.length / 10)}{' '}
-          <p>
-            <button
-              disabled={page === 0}
-              onClick={()=>setPage(0)}>&lt;&lt;</button>
-            <button
-              disabled={page === 0}
-              onClick={()=>setPage(page === 0 ? 0 : page - 1)}>&lt;</button>
-            <button
-              disabled={page === Math.floor(restaurants.length / 10)}
-              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : page + 1)}>&gt;</button>
-            <button
-              disabled={page === Math.floor(restaurants.length / 10)}
-              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
-          </p>
+          <Search
+            filter={filter}
+            setFilter={setFilter}
+            searchText={searchText}
+            setSearchText={setSearchText}
+            setSearch={setSearch} />
+          <Pagination page={page} setPage={setPage} restaurants={restaurants} />
           <button onClick={()=>setFilterToggle(!filterToggle)}>Toggle filters</button>
           <table className="styled-table">
             <thead>
-              <tr>
+              <tr key='h1'>
                 <td key={uuid()}>Name</td>
                 <td key={uuid()}>City</td>
                 <td key={uuid()}>State</td>
                 <td key={uuid()}>Telephone</td>
                 <td key={uuid()}>Genre</td>
               </tr>
-              <tr>
+              <tr key='h2'>
                 <td key={uuid()}></td>
                 <td key={uuid()}></td>
                 <td key={uuid()}><input
@@ -115,6 +88,10 @@ function Table(props) {
       </header>
     </div>
   );
+}
+
+Table.propTypes = {
+  restaurants: PropTypes.array.isRequired
 }
 
 export default Table;
