@@ -4,6 +4,7 @@ import { uuid } from 'lodash-uuid';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
+  const [page, setPage] = useState(0);
   useEffect(() => {
     fetch("https://code-challenge.spectrumtoolbox.com/api/restaurants", {
         headers: {
@@ -11,11 +12,12 @@ function App() {
         },
     }).then(data => {
       data.json().then(json => {
+        console.log(json);
         setRestaurants(json);
       })
     });
   }, []);
-  console.log('restaurants', restaurants);
+  // console.log('restaurants', restaurants);
   const [genreFilter, setGenreFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [filter, setFilter] = useState('');
@@ -50,6 +52,21 @@ function App() {
               console.log('e', e);
               setSearch( searchText );
             }}>Search</button>
+          </p>
+          {' '}Page {page+1} of {Math.ceil(restaurants.length / 10)}{' '}
+          <p>
+            <button
+              disabled={page === 0}
+              onClick={()=>setPage(0)}>&lt;&lt;</button>
+            <button
+              disabled={page === 0}
+              onClick={()=>setPage(page === 0 ? 0 : page - 1)}>&lt;</button>
+            <button
+              disabled={page === Math.floor(restaurants.length / 10)}
+              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : page + 1)}>&gt;</button>
+            <button
+              disabled={page === Math.floor(restaurants.length / 10)}
+              onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
           </p>
           <table className="styled-table">
             <thead>
@@ -87,7 +104,9 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {restaurants.slice(0,10).sort((a,b)=>a.name < b.name ? -1 : 1)
+              {restaurants
+                .sort((a,b)=>a.name < b.name ? -1 : 1)
+                .slice(page*10, (page+1)*10)
                 .filter(r=> r.name.toUpperCase().includes(search.toUpperCase()) ||
                             r.city.toUpperCase().includes(search.toUpperCase()) ||
                             r.genre.toUpperCase().includes(search.toUpperCase()))
