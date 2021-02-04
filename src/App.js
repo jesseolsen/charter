@@ -21,6 +21,7 @@ function App() {
   const [genreFilter, setGenreFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [filter, setFilter] = useState('');
+  const [filterToggle, setFilterToggle] = useState(true);
   const [search, setSearch] = useState('');
   const [searchText, setSearchText] = useState('');
   return (
@@ -68,6 +69,7 @@ function App() {
               disabled={page === Math.floor(restaurants.length / 10)}
               onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
           </p>
+          <button onClick={()=>setFilterToggle(!filterToggle)}>Toggle filters</button>
           <table className="styled-table">
             <thead>
               <tr>
@@ -78,23 +80,25 @@ function App() {
                 <td key={uuid()}>Genre</td>
               </tr>
               <tr>
-                <td key={uuid()}><input /></td>
-                <td key={uuid()}><input /></td>
+                <td key={uuid()}></td>
+                <td key={uuid()}></td>
                 <td key={uuid()}><input
                         type="text"
                         value={ stateFilter }
                         autoFocus={filter === 'State'}
+                        disabled={!filterToggle}
                         onChange={e => {
                           e.preventDefault();
                           setFilter('State');
                           setStateFilter( e.target.value );
                         }}
                 /></td>
-                <td key={uuid()}><input /></td>
+                <td key={uuid()}></td>
                 <td key={uuid()}><input
                         type="text"
                         value={ genreFilter }
                         autoFocus={filter === 'Genre'}
+                        disabled={!filterToggle}
                         onChange={e => {
                           e.preventDefault();
                           setFilter('Genre');
@@ -110,8 +114,8 @@ function App() {
                 .filter(r=> r.name.toUpperCase().includes(search.toUpperCase()) ||
                             r.city.toUpperCase().includes(search.toUpperCase()) ||
                             r.genre.toUpperCase().includes(search.toUpperCase()))
-                .filter(r=>r.state.startsWith(stateFilter.toUpperCase()))
-                .filter(r=>r.genre.toLowerCase().includes(genreFilter.toLowerCase()))
+                .filter(r=>!filterToggle || r.state.startsWith(stateFilter.toUpperCase()))
+                .filter(r=>!filterToggle || r.genre.toLowerCase().includes(genreFilter.toLowerCase()))
                 .map(r => <><tr key={r.id}>
                 <td key={uuid()}>{r.name}</td>
                 <td key={uuid()}>{r.city}</td>
