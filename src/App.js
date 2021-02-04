@@ -5,6 +5,12 @@ import { uuid } from 'lodash-uuid';
 function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [page, setPage] = useState(0);
+  const [genreFilter, setGenreFilter] = useState('');
+  const [stateFilter, setStateFilter] = useState('');
+  const [filter, setFilter] = useState('');
+  const [filterToggle, setFilterToggle] = useState(true);
+  const [search, setSearch] = useState('');
+  const [searchText, setSearchText] = useState('');
   useEffect(() => {
     fetch("https://code-challenge.spectrumtoolbox.com/api/restaurants", {
         headers: {
@@ -12,22 +18,15 @@ function App() {
         },
     }).then(data => {
       data.json().then(json => {
-        console.log(json);
         setRestaurants(json);
       })
     });
   }, []);
-  // console.log('restaurants', restaurants);
-  const [genreFilter, setGenreFilter] = useState('');
-  const [stateFilter, setStateFilter] = useState('');
-  const [filter, setFilter] = useState('');
-  const [filterToggle, setFilterToggle] = useState(true);
-  const [search, setSearch] = useState('');
-  const [searchText, setSearchText] = useState('');
+  let filteredCount = 0;
   return (
     <div>
       <header className="App-header">
-        <p>Restaurant data</p>
+        <h1>Restaurant Data</h1>
           <p>
             <input
               type="text"
@@ -35,7 +34,6 @@ function App() {
               autoFocus={filter === 'Search'}
               placeholder='search'
               onKeyDown={e => {
-                console.log('key', e);
                 setFilter('Search');
                 if(e.key === 'Enter') {
                   setSearch( e.target.value );
@@ -44,13 +42,11 @@ function App() {
                 }
               }}
               onChange={e => {
-                console.log('change');
                 setFilter('Search');
                 setSearchText( e.target.value );
               }}
             />
             <button onClick={(e) => {
-              console.log('e', e);
               setSearch( searchText );
             }}>Search</button>
           </p>
@@ -116,15 +112,18 @@ function App() {
                             r.genre.toUpperCase().includes(search.toUpperCase()))
                 .filter(r=>!filterToggle || r.state.startsWith(stateFilter.toUpperCase()))
                 .filter(r=>!filterToggle || r.genre.toLowerCase().includes(genreFilter.toLowerCase()))
-                .map(r => <><tr key={r.id}>
-                <td key={uuid()}>{r.name}</td>
-                <td key={uuid()}>{r.city}</td>
-                <td key={uuid()}>{r.state}</td>
-                <td key={uuid()}>{r.telephone}</td>
-                <td key={uuid()}>{r.genre}</td>
-              </tr></>)}
+                .map(r => {
+                  filteredCount++;
+                  return (<><tr key={r.id}>
+                    <td key={uuid()}>{r.name}</td>
+                    <td key={uuid()}>{r.city}</td>
+                    <td key={uuid()}>{r.state}</td>
+                    <td key={uuid()}><a href={`tel:${r.telephone}`}>{r.telephone}</a></td>
+                    <td key={uuid()}>{r.genre}</td>
+              </tr></>)})}
             </tbody>
           </table>
+          {filteredCount < 1 && <p>No results were found.</p>}
         <a
           className="App-link"
           href="https://jesseolsen.github.io/charter/"
