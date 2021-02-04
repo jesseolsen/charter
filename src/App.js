@@ -4,6 +4,7 @@ import { uuid } from 'lodash-uuid';
 
 function App() {
   const [restaurants, setRestaurants] = useState([]);
+  const [page, setPage] = useState(0);
   useEffect(() => {
     fetch("https://code-challenge.spectrumtoolbox.com/api/restaurants", {
         headers: {
@@ -11,11 +12,12 @@ function App() {
         },
     }).then(data => {
       data.json().then(json => {
+        console.log(json);
         setRestaurants(json);
       })
     });
   }, []);
-  console.log('restaurants', restaurants);
+  // console.log('restaurants', restaurants);
   const [genreFilter, setGenreFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [filter, setFilter] = useState('');
@@ -50,6 +52,12 @@ function App() {
               console.log('e', e);
               setSearch( searchText );
             }}>Search</button>
+          </p>
+          <p>
+            <button onClick={()=>setPage(0)}>&lt;&lt;</button>
+            <button onClick={()=>setPage(page === 0 ? 0 : page - 1)}>&lt;</button>
+            <button onClick={()=>setPage((page+1)*10 > restaurants.length ? page : page + 1)}>&gt;</button>
+            <button onClick={()=>setPage((page+1)*10 > restaurants.length ? page : Math.floor(restaurants.length / 10))}>&gt;&gt;</button>
           </p>
           <table className="styled-table">
             <thead>
@@ -87,7 +95,9 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {restaurants.slice(0,10).sort((a,b)=>a.name < b.name ? -1 : 1)
+              {restaurants
+                .sort((a,b)=>a.name < b.name ? -1 : 1)
+                .slice(page*10, (page+1)*10)
                 .filter(r=> r.name.toUpperCase().includes(search.toUpperCase()) ||
                             r.city.toUpperCase().includes(search.toUpperCase()) ||
                             r.genre.toUpperCase().includes(search.toUpperCase()))
