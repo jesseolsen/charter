@@ -30,9 +30,8 @@ User stories are as follows:
 button, the table should search results. Search results should match either the name, city, or genre.
 • 7. A user should be able to clear the search by clearing the text value in the search input.
 • 8. A user should only see 10 results at a time and the table should be paginated.
-
-
 • 9. A user should be able to combine filters and search. The user should be able to turn filters on and off while a search value is present.
+
 • 10. If any of the filters do not return any restaurants, the UI should indicate that no results were found.
 
 What we are looking for:
