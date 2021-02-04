@@ -25,10 +25,10 @@ User stories are as follows:
 • 2. A user should see results sorted by name in alphabetical order starting with the beginning of the alphabet
 • 3. A user should be able to filter restaurants by state.
 • 4. A user should be able to filter by genre.
-
 • 5. State and Genre filters should default to “All” and take effect instantaneously (no additional clicks).
 • 6. A user should be able to enter text into a search field. When hitting the enter key or clicking on a search
 button, the table should search results. Search results should match either the name, city, or genre.
+
 • 7. A user should be able to clear the search by clearing the text value in the search input.
 • 8. A user should only see 10 results at a time and the table should be paginated.
 • 9. A user should be able to combine filters and search. The user should be able to turn filters on and off while a search value is present.

@@ -12,7 +12,6 @@ function App() {
     }).then(data => {
       data.json().then(json => {
         setRestaurants(json);
-        console.log(json);
       })
     });
   }, []);
@@ -20,10 +19,38 @@ function App() {
   const [genreFilter, setGenreFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const [searchText, setSearchText] = useState('');
   return (
     <div>
       <header className="App-header">
         <p>Restaurant data</p>
+          <p>
+            <input
+              type="text"
+              value={ searchText }
+              autoFocus={filter === 'Search'}
+              placeholder='search'
+              onKeyDown={e => {
+                console.log('key', e);
+                setFilter('Search');
+                if(e.key === 'Enter') {
+                  setSearch( e.target.value );
+                } else {
+                  setSearchText( e.target.value );
+                }
+              }}
+              onChange={e => {
+                console.log('change');
+                setFilter('Search');
+                setSearchText( e.target.value );
+              }}
+            />
+            <button onClick={(e) => {
+              console.log('e', e);
+              setSearch( searchText );
+            }}>Search</button>
+          </p>
           <table className="styled-table">
             <thead>
               <tr>
@@ -61,6 +88,9 @@ function App() {
             </thead>
             <tbody>
               {restaurants.slice(0,10).sort((a,b)=>a.name < b.name ? -1 : 1)
+                .filter(r=> r.name.toUpperCase().includes(search.toUpperCase()) ||
+                            r.city.toUpperCase().includes(search.toUpperCase()) ||
+                            r.genre.toUpperCase().includes(search.toUpperCase()))
                 .filter(r=>r.state.startsWith(stateFilter.toUpperCase()))
                 .filter(r=>r.genre.toLowerCase().includes(genreFilter.toLowerCase()))
                 .map(r => <><tr key={r.id}>
